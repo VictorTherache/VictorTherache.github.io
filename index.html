@@ -144,7 +144,10 @@ body.in-chapter #city{filter:brightness(.3) saturate(1.25)}
 @media (max-width:760px){.pres{grid-template-columns:minmax(0,1fr)}}
 .idcard{padding:1.1rem;display:flex;flex-direction:column;gap:.9rem;border-color:color-mix(in srgb,var(--acc) 60%,transparent);box-shadow:8px 8px 0 color-mix(in srgb,var(--acc) 30%,transparent)}
 .idcard .tape{display:flex;justify-content:space-between;font-family:var(--font-osd);font-size:1.15rem;color:var(--dim);letter-spacing:.08em}
-.avatar{display:block;width:100%;max-width:100%;aspect-ratio:1;image-rendering:pixelated;background:linear-gradient(180deg,var(--violet),var(--magenta) 62%,var(--amber))}
+.avatar-frame{position:relative;max-width:100%;box-shadow:0 0 0 2px var(--acc),0 0 26px color-mix(in srgb,var(--acc) 45%,transparent);background:var(--night)}
+.avatar-frame::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;
+  background:linear-gradient(180deg,transparent 55%,color-mix(in srgb,var(--magenta) 30%,transparent))}
+.avatar{display:block;width:100%;height:auto;max-width:100%;aspect-ratio:1;object-fit:cover}
 .idcard .nm{margin:0;font-family:var(--font-display);font-style:italic;font-weight:800;font-size:2.1rem;line-height:1}
 .stats{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.4rem 1rem;margin:0}
 .stats dt{font-family:var(--font-osd);font-size:1.2rem;color:var(--dim);letter-spacing:.06em}
@@ -342,7 +345,7 @@ const CONTENT = {
       paragraphs: [
         "Je construis et je modernise des applications métier : des outils internes utilisés par les équipes des magasins et des achats, des migrations de code legacy vers des frameworks modernes, et des boutiques e-commerce menées de l'hébergement jusqu'à la production.",
         "Collaboratif, curieux et fiable. Je cherche un poste full-stack en Australie ou en full remote. Six années passées en Inde m'ont rendu à l'aise en anglais.",
-        "Ce portfolio est lui-même un projet : une ville générée en direct, des bruitages synthétisés dans le navigateur, et pas une seule image téléchargée."
+        "Ce portfolio est lui-même un projet : une ville générée en direct, sans aucune image de décor, et des bruitages synthétisés dans le navigateur."
       ],
       stats: [
         ['Classe', 'Développeur full-stack'],
@@ -427,7 +430,7 @@ const CONTENT = {
       paragraphs: [
         "I build and modernize business applications: internal tools used by store and purchasing teams, legacy codebases migrated to modern frameworks, and e-commerce platforms taken from hosting to production.",
         "Collaborative, curious and reliable. Based in France and actively seeking a full-stack role in Australia or fully remote. Fluent in English after six years living in India.",
-        "This portfolio is a project in itself: a city generated live, sound effects synthesized in the browser, and not a single downloaded image."
+        "This portfolio is a project in itself: a city generated live with no image assets, and sound effects synthesized in the browser."
       ],
       stats: [
         ['Class', 'Full-stack developer'],
@@ -531,7 +534,7 @@ const UI = {
     gradeTitle: 'BANDE TERMINÉE', grade: 'NOTE', continue: 'Continuer ▶',
     rows: ['Chapitres', 'Dossiers lus', 'Combo max', 'Temps', 'Score'],
     months: ['JAN', 'FÉV', 'MAR', 'AVR', 'MAI', 'JUIN', 'JUIL', 'AOÛT', 'SEP', 'OCT', 'NOV', 'DÉC'],
-    nav: 'Chapitres', portrait: 'Portrait pixel', seen: '✓ VU', langSwitch: 'Switch to English',
+    nav: 'Chapitres', seen: '✓ VU', langSwitch: 'Switch to English',
     credit: '♪ « Mystery » — JustinBeats'
   },
   en: {
@@ -548,7 +551,7 @@ const UI = {
     gradeTitle: 'TAPE COMPLETE', grade: 'GRADE', continue: 'Continue ▶',
     rows: ['Chapters', 'Files read', 'Max combo', 'Time', 'Score'],
     months: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
-    nav: 'Chapters', portrait: 'Pixel portrait', seen: '✓ SEEN', langSwitch: 'Passer en français',
+    nav: 'Chapters', seen: '✓ SEEN', langSwitch: 'Passer en français',
     credit: '♪ "Mystery" by JustinBeats'
   }
 };
@@ -1009,33 +1012,6 @@ const City = (() => {
 })();
 
 /* =====================================================================
-   PORTRAIT PIXEL (remplace-le par ta photo si tu veux)
-   ===================================================================== */
-const PORTRAIT = [
-  '................',
-  '.....HHHHHH.....',
-  '....HHHHHHHH....',
-  '...HHHHHHHHHH...',
-  '...HHSSSSSSHH...',
-  '...HSSSSSSSSH...',
-  '..SGGGGSSGGGGS..',
-  '..SGLGGSSGLGGS..',
-  '...SSSSSSSSSS...',
-  '...SSSMMMMSSS...',
-  '....SSSSSSSS....',
-  '.....SSSSSS.....',
-  '......SSSS......',
-  '...JJJCCCCJJJ...',
-  '..JJJJJCCJJJJJ..',
-  '.JJJJJJJJJJJJJJ.'
-];
-const PAL = { H: '#24112c', S: '#e9a37c', G: '#0b0612', L: '#2ef2ff', M: '#b5604a', J: '#3a1a5c', C: '#fff3e6' };
-function drawPortrait(cv) {
-  const g = cv.getContext('2d');
-  PORTRAIT.forEach((row, y) => [...row].forEach((ch, x) => { if (PAL[ch]) { g.fillStyle = PAL[ch]; g.fillRect(x, y, 1, 1); } }));
-}
-
-/* =====================================================================
    PAGES DES CHAPITRES
    ===================================================================== */
 const RENDER = {
@@ -1044,7 +1020,7 @@ const RENDER = {
     return `<div class="pres">
       <aside class="idcard panel">
         <div class="tape"><span>${T().idcard}</span><span>N°001</span></div>
-        <canvas class="avatar" id="avatar" width="16" height="16" role="img" aria-label="${esc(T().portrait)}"></canvas>
+        <div class="avatar-frame"><img class="avatar" src="me.jpg" alt="${esc(PROFILE.fullName)}" width="480" height="480" decoding="async"></div>
         <p class="nm">${fmt(PROFILE.fullName)}</p>
         <dl class="stats">${p.stats.map(([k, v]) => `<dt>${fmt(k)}</dt><dd>${fmt(v)}</dd>`).join('')}</dl>
       </aside>
@@ -1241,7 +1217,6 @@ async function closeChapter() {
 }
 
 function wire(id) {
-  if (id === 'presentation') { const a = $('#avatar'); if (a) drawPortrait(a); }
   if (id === 'projets') {
     els.body.querySelectorAll('.file').forEach(el => {
       const read = () => {
