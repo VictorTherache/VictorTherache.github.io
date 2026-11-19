@@ -65,7 +65,7 @@ body.in-chapter #city{filter:brightness(.3) saturate(1.25)}
 .menu-inner{display:flex;flex-direction:column;gap:clamp(1rem,3.2vh,2.3rem);margin-left:clamp(0px,7vw - 48px,150px);min-width:0}
 .kicker{margin:0;font-family:var(--font-osd);font-size:clamp(1.15rem,2.4vw,1.45rem);letter-spacing:.14em;color:var(--cyan);text-shadow:0 0 10px color-mix(in srgb,var(--cyan) 60%,transparent)}
 .title-wrap{transform-origin:left 70%;will-change:transform}
-.title{margin:0;font-family:var(--font-display);font-style:italic;font-weight:900;font-size:clamp(3.8rem,15vw,10.5rem);line-height:.86;letter-spacing:-.005em;color:var(--ink);transform:skewX(-7deg);transform-origin:left bottom;white-space:nowrap}
+.title{margin:0;font-family:var(--font-display);font-style:italic;font-weight:900;font-size:clamp(3.2rem,17vw,10rem);line-height:.86;letter-spacing:-.005em;color:var(--ink);transform:skewX(-7deg);transform-origin:left bottom;white-space:nowrap}
 .title .ch{display:inline-block;will-change:transform}
 .title.glitch{animation:glitch .3s steps(2) 1}
 @keyframes glitch{
@@ -330,6 +330,7 @@ body.in-chapter #city{filter:brightness(.3) saturate(1.25)}
    ===================================================================== */
 const PROFILE = {
   name: 'Victor',
+  title: 'Victor.T',
   fullName: 'Victor Therache',
   email: 'therachevictor1997@gmail.com',
   github: 'https://github.com/VictorTherache',
@@ -1306,8 +1307,8 @@ function startApp(saved) {
     (saved.read || []).forEach(v => state.read.add(v));
     state.graded = !!saved.graded; state.copied = !!saved.copied; state.maxCombo = +saved.maxCombo || 1;
   }
-  [...PROFILE.name.toUpperCase()].forEach(c => { const s = document.createElement('span'); s.className = 'ch'; s.textContent = c; s.setAttribute('aria-hidden', 'true'); els.title.append(s); chars.push(s); });
-  els.title.setAttribute('aria-label', PROFILE.name);
+  [...PROFILE.title.toUpperCase()].forEach(c => { const s = document.createElement('span'); s.className = 'ch'; s.textContent = c; s.setAttribute('aria-hidden', 'true'); els.title.append(s); chars.push(s); });
+  els.title.setAttribute('aria-label', PROFILE.fullName);
   CHAPTERS.forEach((c, i) => {
     const li = document.createElement('li');
     li.innerHTML = `<button class="item" type="button" data-i="${i}"><span class="num">${c.num}</span><span class="lbl"></span><span class="seen" hidden></span><span class="loc"></span></button>`;
